@@ -1,0 +1,5 @@
+EmailPostDeliveryEvents
+| where Action == "Quarantine release"
+| summarize arg_min(Timestamp,*) by NetworkMessageId,RecipientEmailAddress
+| join kind=leftouter (EmailEvents | where DeliveryLocation == "Quarantine") on NetworkMessageId
+| summarize count() by SenderFromDomain,bin(Timestamp1,1d),DetectionMethods1,OrgLevelPolicy,UserLevelPolicy
